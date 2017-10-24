@@ -1,7 +1,6 @@
 var inquirer = require("inquirer");
 var Mysql = require("mysql");
-var Table = require("cli-table");
-
+require("console.table");
 
 var connection = Mysql.createConnection({
     host: "localhost",
@@ -20,15 +19,12 @@ connection.connect(function (err){
 // Reading from the database
 function readStock(){
     connection.query("SELECT * FROM products", function(err,res){
-        for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + " | " + res[i].product_name + " | " + res[i].department_name + " | " + res[i].price + " | " + res[i].stock_quantity);
-        }
-        console.log("----------------------------------------------------------------");
+        console.table("\n", res);
+        start();
     })
-
 }
 
-// readStock();
+
 var stock_quantity = 10;
 start();
 
@@ -38,7 +34,7 @@ inquirer.prompt([
         type: "list",
         name: "department_name",
         message: "Welcome to The Apple Store on Node",
-        choices: ["Shop Macs", "Shop iPhones", "Shop iPads", "Buy Beats Headphones", "Shop Accessories"]
+        choices: ["Shop Macs", "Shop iPhones", "Shop iPads", "Buy Beats Headphones", "Shop Accessories", "View Our Entire Product Line up"]
     }
 ]).then(function(answer){
     if (answer.department_name === "Shop Macs") {
@@ -49,8 +45,10 @@ inquirer.prompt([
         shopiPad();
     } else if (answer.department_name === "Buy Beats Headphones"){
         shopBeats();
-    } else {
+    } else if (answer.department_name === "Shop Accessories"){
         shopAccessories();
+    } else {
+        readStock();
     }
 })
 }
@@ -87,6 +85,7 @@ function shopPhones(){
            
        } else { 
         calcOrder();
+        start();
 
         function calcOrder(){
             var orderNumber = Math.floor((Math.random() * 99999999));
@@ -114,9 +113,6 @@ function shopPhones(){
             
         }
         
-         
-
-
        }
     })
 }
@@ -179,6 +175,8 @@ function shopMacs() { inquirer.prompt([
            
        } else { 
         calcOrder();
+        
+       
 
         function calcOrder(){
             var orderNumber = Math.floor((Math.random() * 99999999));
@@ -205,6 +203,7 @@ function shopMacs() { inquirer.prompt([
             })
             
         }
+        start();
     }
 
 

@@ -16,10 +16,10 @@ var connection = Mysql.createConnection({
 // Setting up connection to the database
 connection.connect(function (err){
     if (err) throw err;
-    console.log("connected");
+    start();
 });
 
-start();
+
 
 // Reading from the database
 function readStock(){
@@ -102,14 +102,14 @@ function addProduct(){
 // var products = connection.query("SELECT product_name FROM products", function (err,res){
 //     if (err) throw err;
 //     console.log(products);
-//     connection.end();
+//     
 // });
 
 function updateInventory(){
     inquirer.prompt([
       {
         name: "product_name",
-        type: "rawlist",
+        type: "list",
         message: "What is the product you would like to update?",
         choices: ["Macbook Pro 15", "Macbook Pro 13", "Macbook Air 13", "Mac Pro", "iMac 27 inch", "iPhone X",
                 "iPhone 8 Plus", "iPhone 8", "iPhone 7 Plus", "iPhone 7", 
@@ -132,7 +132,10 @@ function updateInventory(){
 
 
 function viewLowStock (){
-    connection.query("SELECT * FROM products WHERE stock_quantity < ?", { stock_quantity: 10 },function(err, res) { 
-        console.log(res);
+    connection.query("SELECT * FROM products WHERE stock_quantity < ?", 
+    { stock_quantity: 10 },function(err, res) { 
+        console.log ("No Stock is low at the moment");
+        start();
      }
+     
     )}
